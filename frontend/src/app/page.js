@@ -11,7 +11,8 @@ export default function Home() {
   const router = useRouter();
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold">Welcome </h1>
+      <h1 className="text-4xl font-bold">Welcome (click on buttons to get results) </h1>
+      <h1 className="text-2xl font-bold">Note: get ids from  Get all materials page  </h1>
       <div className="mt-4">
         Get all materials:
         <Button
