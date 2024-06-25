@@ -1,41 +1,13 @@
 import { Request, Response } from "express";
 import Material from "../models/materials";
-import { getSignedImgUrl } from "../utilis";
-
-interface MaterialProps {
-  name: string;
-  technology: string;
-  colors: string;
-  pricePerGram: number;
-  imageUrl: string;
-}
+import { getSignedImgUrl, getmaterialsWithUrls } from "../utilis";
 
 class MaterialController {
   public async getMaterials(req: Request, res: Response) {
     try {
       const materials = await Material.find({});
 
-      const promises = materials.map(async (material) => {
-        const imageUrl = material.imageUrl;
-        const signedUrlPromise = await getSignedImgUrl(imageUrl);
-        material.imageUrl = signedUrlPromise || "";
-
-        return material;
-      });
-
-      const materialsWithUrls = await Promise.allSettled(promises);
-
-      const materialsData = materialsWithUrls.map((result: any) => {
-        if (result.status === "fulfilled") {
-          return result.value;
-        } else {
-          console.error(
-            "Error generating signed URL for material:",
-            result.value._id
-          );
-          return result.value;
-        }
-      });
+      const materialsData = await getmaterialsWithUrls(materials);
 
       res.status(200).json(materialsData);
     } catch (err) {

@@ -14,3 +14,31 @@ export async function getSignedImgUrl(objectKey: string) {
     return null;
   }
 }
+
+export async function getmaterialsWithUrls(materials: any[]) {
+
+  const promises = materials.map(async (material) => {
+    const imageUrl = material.imageUrl;
+    const signedUrlPromise = await getSignedImgUrl(imageUrl);
+    material.imageUrl = signedUrlPromise || "";
+
+    return material;
+  });
+
+  const materialsWithUrls = await Promise.allSettled(promises);
+
+  const materialsData = materialsWithUrls.map((result: any) => {
+    if (result.status === "fulfilled") {
+      return result.value;
+    } else {
+      console.error(
+        "Error generating signed URL for material:",
+        result.value._id
+      );
+      return result.value;
+    }
+  });
+
+  return materialsData;
+
+}
