@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Material from "../models/materials";
+import { getSignedImgUrl } from "../utilis";
 
 interface MaterialProps {
   name: string;
@@ -13,7 +14,30 @@ class MaterialController {
   public async getMaterials(req: Request, res: Response) {
     try {
       const materials = await Material.find({});
-      res.status(200).json(materials);
+
+      const promises = materials.map(async (material) => {
+        const imageUrl = material.imageUrl;
+        const signedUrlPromise = await getSignedImgUrl(imageUrl);
+        material.imageUrl = signedUrlPromise || "";
+
+        return material;
+      });
+
+      const materialsWithUrls = await Promise.allSettled(promises);
+
+      const materialsData = materialsWithUrls.map((result: any) => {
+        if (result.status === "fulfilled") {
+          return result.value;
+        } else {
+          console.error(
+            "Error generating signed URL for material:",
+            result.value._id
+          );
+          return result.value;
+        }
+      });
+
+      res.status(200).json(materialsData);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Error fetching materials" });
@@ -22,9 +46,8 @@ class MaterialController {
 
   public async getMaterialById(req: Request, res: Response) {
     try {
-      console.log(req.params.id);
-      const material = await Material.findById(req.params.id);
-      console.log(material);
+      const material: any = await Material.findById(req.params.id);
+      material.imageUrl = await getSignedImgUrl(material.imageUrl);
       if (!material) {
         return res.status(404).json({ error: "Material not found" });
       }
@@ -42,7 +65,7 @@ class MaterialController {
         .split(",")
         .map((color: string) => color.trim());
 
-      const imageUrl = req.file ? (req.file as any).location : finalImgName;
+      const imageUrl = finalImgName;
 
       const newMaterial = new Material({
         name,
@@ -64,7 +87,6 @@ class MaterialController {
       if (!material) {
         return res.status(404).json({ error: "Material not found" });
       }
-      console.log(req.body);
 
       const { name, technology, colors, pricePerGram, finalImgName } = req.body;
       const imageUrl = finalImgName;
@@ -86,7 +108,6 @@ class MaterialController {
   public async deleteMaterial(req: Request, res: Response) {
     try {
       const material = await Material.findByIdAndDelete(req.params.id);
-      console.log(material);
       if (!material) {
         return res.status(404).json({ error: "Material not found" });
       }
