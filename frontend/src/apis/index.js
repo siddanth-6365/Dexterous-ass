@@ -1,21 +1,24 @@
-const BASE_URL = "http://localhost:3000/api"; // Change this to your backend URL
+import axios from "axios";
+
+const BASE_URL = "http://localhost:8000/api"; // Change this to your backend URL
 
 export const getMaterials = async () => {
-  const response = await fetch(`${BASE_URL}/materials`);
-  return response.json();
+  const response = await axios.get(`${BASE_URL}/materials`);
+  return response;
 };
 
 export const getMaterialById = async (id) => {
   const response = await fetch(`${BASE_URL}/materials/${id}`);
-  return response.json();
+  return response;
 };
 
-export const createMaterial = async (material) => {
-  const response = await fetch(`${BASE_URL}/materials`, {
-    method: "POST",
-    body: material,
+export const createMaterial = async (formData) => {
+  const response = await axios.post(`${BASE_URL}/materials`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
-  return response.json();
+  return response;
 };
 
 export const updateMaterial = async (id, material) => {
@@ -23,7 +26,7 @@ export const updateMaterial = async (id, material) => {
     method: "PUT",
     body: material,
   });
-  return response.json();
+  return response;
 };
 
 export const deleteMaterial = async (id) => {

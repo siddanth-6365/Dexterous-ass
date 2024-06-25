@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { createMaterial } from "@/apis/index";
-import axios from "axios";
 
 const MaterialForm = () => {
   const [formData, setFormData] = useState({
@@ -9,9 +8,11 @@ const MaterialForm = () => {
     technology: "",
     colors: "",
     pricePerGram: "",
-    imageUrl: "",
+    image: "",
   });
   const [file, setFile] = useState(null);
+  const [uploadMessage, setUploadMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,33 +29,23 @@ const MaterialForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Upload image to Cloudinary and get the URL
     if (file) {
-      try {
-        const imageUrl = await handleUpload(file);
-        formData.imageUrl = imageUrl;
-      } catch (error) {
-        console.error("Failed to upload image:", error);
-        return;
-      }
+      formData.image = file;
     }
+    console.log("finalformData :", formData);
 
-    await createMaterial(formData);
-  };
-
-  const handleUpload = async () => {
-    const formData = new FormData();
-    formData.append("file", file);
-    console.log(formData)
+    setIsLoading(true);
 
     try {
-      const response = await axios.post("/api/imgUpload", {formData});
+      const response = await createMaterial(formData);
 
-      const data = await response.json();
-      setImageUrl(data.url); // Set the uploaded image URL
+      setUploadMessage("Material created successfully!");
+      console.log("Material created:", response.data);
     } catch (error) {
-      console.error("Error uploading image:", error);
-      setError("Error uploading image");
+      console.error("Error creating material:", error);
+      setUploadMessage("Error creating material");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,6 +53,7 @@ const MaterialForm = () => {
     <form
       onSubmit={handleSubmit}
       className="space-y-4 p-4 bg-white text-black rounded shadow-md max-w-lg mx-auto mt-8 "
+      encType="multipart/form-data"
     >
       <div>
         <label
@@ -154,11 +146,14 @@ const MaterialForm = () => {
       <div>
         <button
           type="submit"
-          className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className={`w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+            isLoading ? "disabled opacity-50 cursor-not-allowed" : ""
+          }`} // Disable button during loading
         >
-          Add Material
+          {isLoading ? "Adding..." : "Add Material"}
         </button>
       </div>
+      {uploadMessage && <p className="text-center">{uploadMessage}</p>}
     </form>
   );
 };

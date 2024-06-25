@@ -2,12 +2,15 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import Routes from "./routes";
 import mongoose from "mongoose";
+import cors from "cors";
 
 dotenv.config();
 const app: Express = express();
-const port = 3000;
+const port = 8000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 async function connectToDB() {
   await mongoose
