@@ -43,16 +43,17 @@ const MaterialList = () => {
                 className="rounded-t-md w-full h-48 object-cover"
               />
               <div className="p-4">
-                <h3 className="text-lg font-medium text-gray-700">
+                <h3 className="text-lg font-medium text-gray-300">
                   {material.name}
                 </h3>
-                <p className="text-gray-500">
+                <p className="text-gray-400">id : {material._id}</p>
+                <p className="text-gray-400">
                   Technology: {material.technology}
                 </p>
-                <p className="text-gray-500">
+                <p className="text-gray-400">
                   Colors: {material.colors.join(", ")}
                 </p>
-                <p className="text-gray-500">
+                <p className="text-gray-400">
                   Price per Gram: ${material.pricePerGram}
                 </p>
               </div>

@@ -1,27 +1,40 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { deleteMaterial } from "@/apis";
 
 export default function Home() {
   const [getId, setGetId] = useState();
+  const [updateId, setUpdateId] = useState();
+  const [deleteId, setDeleteId] = useState();
+
   const router = useRouter();
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-4xl font-bold">Welcome </h1>
-      <div className="flex flex-col mt-4">
-        Get all materials
-        <Button name={"GET /materials"} />
-        enter id:{" "}
-        <input
-          className="mb-4 p-2 text-black"
-          onChange={(e) => setGetId(e.target.value)}
-        />{" "}
+      <div className="mt-4">
+        Get all materials:
         <Button
-          name={"GET /materials/:id"}
+          name={"GET /materials"}
           onClickFunction={() => {
-            router.push(`/materials/${getId}`);
+            router.push(`/materials`);
           }}
         />
+        <div className="flex mt-4">
+          <label htmlFor="getId">Enter id: </label>
+          <input
+            className=" h-8 text-black mr-4 "
+            id="getId"
+            onChange={(e) => setGetId(e.target.value)}
+          />
+          <Button
+            name={"GET /materials/:id"}
+            onClickFunction={() => {
+              router.push(`/materials/${getId}`);
+            }}
+            className="ml-2"
+          />
+        </div>
         Create new materials :
         <Button
           name={"POST /materials"}
@@ -29,8 +42,45 @@ export default function Home() {
             router.push("/form");
           }}
         />
-        <Button name={"PUT /materials/:id"} />
-        <Button name={"DELETE /materials/:id"} />
+        <div className="flex mt-4">
+          <label htmlFor="updateId">Update materials, Enter id:</label>
+          <input
+             className=" h-8 text-black mr-4 "
+            id="updateId"
+            onChange={(e) => setUpdateId(e.target.value)}
+          />
+          <Button
+            name={"PUT /materials/:id"}
+            onClickFunction={() => {
+              router.push(`/form/${updateId}`);
+            }}
+            className="ml-2"
+          />
+        </div>
+        <div className="flex mt-4">
+          <label htmlFor="deleteId">Delete, Enter id:</label>
+          <input
+             className=" h-8 text-black mr-4 "
+            id="deleteId"
+            onChange={(e) => setDeleteId(e.target.value)}
+          />
+          <Button
+            name={"DELETE /materials/:id"}
+            onClickFunction={async () => {
+              try {
+                if (!deleteId) {
+                  alert("please enter id");
+                }
+                await deleteMaterial(deleteId);
+                alert("deleted by id");
+              } catch (err) {
+                console.log("error while deleting", err);
+                alert("error while deleting");
+              }
+            }}
+            className="ml-2"
+          />
+        </div>
       </div>
     </main>
   );

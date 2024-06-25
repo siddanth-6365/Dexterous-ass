@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import Material from "../models/materials"; // Assuming your Material model is in ../models/materials
+import Material from "../models/materials"; 
 
-// Interface for Material properties (optional, for type safety)
 interface MaterialProps {
   name: string;
   technology: string;
@@ -11,7 +10,6 @@ interface MaterialProps {
 }
 
 class MaterialController {
-  // Fetch all materials
   public async getMaterials(req: Request, res: Response) {
     try {
       const materials = await Material.find({});
@@ -22,10 +20,11 @@ class MaterialController {
     }
   }
 
-  // Fetch a material by ID
   public async getMaterialById(req: Request, res: Response) {
     try {
+      console.log(req.params.id);
       const material = await Material.findById(req.params.id);
+      console.log(material);
       if (!material) {
         return res.status(404).json({ error: "Material not found" });
       }
@@ -36,7 +35,6 @@ class MaterialController {
     }
   }
 
-  // Add a new material
   public async addMaterial(req: Request, res: Response) {
     try {
       console.log(req.body);
@@ -50,7 +48,7 @@ class MaterialController {
       }
       // const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
       // const imageUrl = `${BACKEND_URL}/dist/uploads/${finalImgName}`;
-      const imageUrl = finalImgName;
+      const imageUrl = finalImgName; // for now storing only the image name
 
       const newMaterial = new Material({
         name,
@@ -66,22 +64,22 @@ class MaterialController {
     }
   }
 
-  // Update a material
   public async updateMaterial(req: Request, res: Response) {
     try {
       const material = await Material.findById(req.params.id);
       if (!material) {
         return res.status(404).json({ error: "Material not found" });
       }
+      console.log(req.body);
 
-      const { name, technology, colors, pricePerGram } = req.body;
-      const imageUrl = req.file?.path || material.imageUrl;
+      const { name, technology, colors, pricePerGram, finalImgName } = req.body;
+      const imageUrl = finalImgName;
 
       material.name = name || material.name;
       material.technology = technology || material.technology;
       material.colors = colors || material.colors;
       material.pricePerGram = pricePerGram || material.pricePerGram;
-      material.imageUrl = imageUrl;
+      material.imageUrl = imageUrl || material.imageUrl;
 
       await material.save();
       res.status(200).json(material);
@@ -91,10 +89,10 @@ class MaterialController {
     }
   }
 
-  // Delete a material
   public async deleteMaterial(req: Request, res: Response) {
     try {
       const material = await Material.findByIdAndDelete(req.params.id);
+      console.log(material);
       if (!material) {
         return res.status(404).json({ error: "Material not found" });
       }

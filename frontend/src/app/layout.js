@@ -11,7 +11,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+      <a href="/"> 
+        <button  className="bg-blue-500 hover:bg-blue-700 mt-2 text-white font-bold py-2 px-4 p-4 mb-4 rounded">
+           Go back Home 
+          </button>
+          </a>
+        {children}</body>
     </html>
   );
 }

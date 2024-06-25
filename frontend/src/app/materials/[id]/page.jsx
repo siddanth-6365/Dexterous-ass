@@ -15,6 +15,7 @@ const MaterialDetails = ({ params }) => {
 
       try {
         const response = await getMaterialById(id);
+        console.log(response,id)
         setMaterial(response.data);
       } catch (error) {
         console.error("Error fetching material:", error);
@@ -25,7 +26,7 @@ const MaterialDetails = ({ params }) => {
     };
 
     fetchData();
-  }, [id]);
+  }, []);
 
   if (isLoading) {
     return (

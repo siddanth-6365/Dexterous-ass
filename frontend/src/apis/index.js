@@ -8,7 +8,7 @@ export const getMaterials = async () => {
 };
 
 export const getMaterialById = async (id) => {
-  const response = await fetch(`${BASE_URL}/materials/${id}`);
+  const response = await axios.get(`${BASE_URL}/materials/${id}`);
   return response;
 };
 
@@ -22,15 +22,10 @@ export const createMaterial = async (formData) => {
 };
 
 export const updateMaterial = async (id, material) => {
-  const response = await fetch(`${BASE_URL}/materials/${id}`, {
-    method: "PUT",
-    body: material,
-  });
+  const response = await axios.put(`${BASE_URL}/materials/${id}`, material);
   return response;
 };
 
 export const deleteMaterial = async (id) => {
-  await fetch(`${BASE_URL}/materials/${id}`, {
-    method: "DELETE",
-  });
+  await axios.delete(`${BASE_URL}/materials/${id}`);
 };
