@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000/api"; // Change this to your backend URL
+const BASE_URL = "https://dexterous-ass.onrender.com/api";
 
 export const getMaterials = async () => {
   const response = await axios.get(`${BASE_URL}/materials`);
