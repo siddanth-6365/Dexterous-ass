@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Material from "../models/materials"; 
+import Material from "../models/materials";
 
 interface MaterialProps {
   name: string;
@@ -37,18 +37,12 @@ class MaterialController {
 
   public async addMaterial(req: Request, res: Response) {
     try {
-      console.log(req.body);
       const { name, technology, colors, pricePerGram, finalImgName } = req.body;
       const Arraycolors = colors
         .split(",")
         .map((color: string) => color.trim());
-      console.log(Arraycolors);
-      if (!req.file) {
-        return res.status(400).json({ message: "Error: No image uploaded" });
-      }
-      // const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
-      // const imageUrl = `${BACKEND_URL}/dist/uploads/${finalImgName}`;
-      const imageUrl = finalImgName; // for now storing only the image name
+
+      const imageUrl = req.file ? (req.file as any).location : finalImgName;
 
       const newMaterial = new Material({
         name,
