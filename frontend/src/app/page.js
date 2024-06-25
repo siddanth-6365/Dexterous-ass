@@ -12,7 +12,8 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-4xl font-bold">Welcome (click on buttons to get results) </h1>
-      <h1 className="text-2xl font-bold">Note: get ids from  Get all materials page  </h1>
+      <h1 className="text-1xl font-bold">Note: Server might take 50 sec to start (since free version)  </h1>
+      <h1 className="text-1xl font-bold">Tip: get ids from  Get all materials page  </h1>
       <div className="mt-4">
         Get all materials:
         <Button
