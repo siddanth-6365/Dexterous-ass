@@ -8,8 +8,11 @@ export default function Home() {
   const [updateId, setUpdateId] = useState();
   const [deleteId, setDeleteId] = useState();
 
-  useEffect(async () => {
-    await hotloadDb();
+  useEffect(() => {
+    const hotload = async () => {
+      await hotloadDb();
+    };
+    hotload();
   }, []);
 
   const router = useRouter();
