@@ -1,0 +1,1 @@
+This project implements a server-side API for material management, adhering to the Model-View-Controller (MVC) architectural pattern. It offers (CRUD) operations for materials, along with secure image storage in Amazon S3. A basic frontend interface is also provided for testing the backend functionality.
