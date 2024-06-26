@@ -1,12 +1,11 @@
 import axios from "axios";
 
-const BASE_URL = "https://dexterous-ass.onrender.com/api"; 
-// const BASE_URL = "http://localhost:8000/api"; 
-
+const BASE_URL = "https://dexterous-ass.onrender.com/api";
+// const BASE_URL = "http://localhost:8000/api";
 
 export const getMaterials = async () => {
   const response = await axios.get(`${BASE_URL}/materials`);
-  console.log(response)
+  console.log(response);
   return response;
 };
 
@@ -31,4 +30,8 @@ export const updateMaterial = async (id, material) => {
 
 export const deleteMaterial = async (id) => {
   await axios.delete(`${BASE_URL}/materials/${id}`);
+};
+
+export const hotloadDb = async () => {
+  await axios.get("https://dexterous-ass.onrender.com/");
 };

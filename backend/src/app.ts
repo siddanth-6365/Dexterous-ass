@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import Routes from "./routes"
+import Routes from "./routes";
 import cors from "cors";
 import { connectToDB } from "./db";
 
@@ -15,7 +15,7 @@ app.use(cors());
 connectToDB();
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello woring fine!");
+  res.json({ msg: "Hello woring fine!" });
 });
 
 app.use("/api", Routes);
