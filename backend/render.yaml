@@ -1,0 +1,6 @@
+web:
+  concurrency: 1
+  scripts:
+    - name: ping-server
+      cmd: curl -sL https://dexterous-ass.onrender.com/
+      interval: 3m # Run every 5 minutes
